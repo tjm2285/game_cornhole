@@ -13,7 +13,9 @@ public class ProjectileShooter : MonoBehaviour
     void Start()
     {
         _prefab = Resources.Load<GameObject>("projectile");
-        _direction = Camera.main.transform.forward;
+        _direction = transform.forward;
+
+        
     }
 
     // Update is called once per frame
@@ -23,18 +25,30 @@ public class ProjectileShooter : MonoBehaviour
         {
             isMouseDown = true;
 
+
         }
 
 
         if(isMouseDown)
         {
-            speed+=0.2f;
+            speed+=0.4f;
         }
 
         if (Input.GetMouseButtonUp(0))
         {
             Debug.Log(speed);
+            //transform.LookAt(Input.mousePosition);
+            Vector3 mouse = Input.mousePosition;
+            Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(new Vector3(
+                                                                mouse.x,
+                                                                mouse.y,
+                                                                transform.position.y));
+            Vector3 forward = mouseWorld - transform.position;
+            transform.rotation = Quaternion.LookRotation(forward, Vector3.up);
+            _direction = transform.forward;
             GameObject projectile = Instantiate<GameObject>(_prefab);
+
+
 
             projectile.transform.position = transform.position + _direction * 2;
 
